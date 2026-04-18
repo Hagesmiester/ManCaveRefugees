@@ -1493,7 +1493,7 @@
       No spam - we know you get enough unsolicited opinions at home.
     </p>
     <form class="signup-form" onsubmit="handleSignup(event)">
-      <input type="email" placeholder="Your email (she won't find out)" required>
+      <input type="email" name="email" placeholder="Your email (she won't find out)" required aria-label="Email address">
       <button type="submit">Enlist</button>
     </form>
     <p class="signup-fine">
@@ -1555,21 +1555,43 @@
   }
 
   // Signup handler (placeholder)
+  const SIGNUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyvuEaqVgpkBVVlnQdu70rPJNOjdcM1oHx41OvBO4S2NNdwTxDnrqIJz6Xuqtk4fBj7/exec';
+
   function handleSignup(e) {
     e.preventDefault();
-    const input = e.target.querySelector('input');
-    const email = input.value;
-    input.value = '';
-    // Replace button text temporarily
+    const input = e.target.querySelector('input[name=email]');
+    const email = (input.value || '').trim();
+    if (!email || !/.+@.+\..+/.test(email)) return;
     const btn = e.target.querySelector('button');
     const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const payload = JSON.stringify({
+      email: email,
+      source: 'mcr',
+      page: location.pathname,
+      userAgent: navigator.userAgent,
+      referrer: document.referrer
+    });
+
+    // text/plain avoids CORS preflight; Apps Script reads e.postData.contents anyway
+    fetch(SIGNUP_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: payload
+    }).catch(function () { /* opaque response in no-cors; ignore */ });
+
+    input.value = '';
     btn.textContent = "You're In, Mate";
     btn.style.background = '#1DB954';
     btn.style.borderColor = '#1DB954';
-    setTimeout(() => {
+    setTimeout(function () {
       btn.textContent = original;
       btn.style.background = '';
       btn.style.borderColor = '';
+      btn.disabled = false;
     }, 3000);
   }
 
