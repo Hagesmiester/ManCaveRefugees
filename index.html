@@ -437,6 +437,16 @@
 
   .product-image-wbg {
     background: linear-gradient(135deg, var(--green-dark) 0%, #0d3318 100%);
+    padding: 16px;
+  }
+
+  .product-image-wbg img {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.35);
+    display: block;
   }
 
   .product-image-solo {
@@ -1220,22 +1230,19 @@
     <div class="products-grid">
       <!-- WIFE BE GONE -->
       <div class="product-card fade-in">
-        <div class="product-image product-image-wbg">
+        <a href="/wifebegone/" class="product-image product-image-wbg" aria-label="View Wife Be Gone product page">
           <div class="product-badge">Coming Soon</div>
-          <div class="wbg-bottle">
-            <div class="bottle-shape"></div>
-            <div class="bottle-label">100ml / 3.4 fl oz</div>
-          </div>
-        </div>
+          <img src="/assets/wbg-product.png" alt="Wife Be Gone label artwork - WIFE BE GONE Advanced Behaviour Remover & Mood Corrector, 2-Spray Technology">
+        </a>
         <div class="product-info">
           <div class="product-name">Wife Be Gone</div>
           <div class="product-brand">2-Spray Technology&trade; | Clinically Unproven</div>
           <p class="product-desc">
-            The world's first domestic nagging solution. Spray 1 stops her mid-sentence.
-            Spray 2 restores factory settings. Contents: water. Results: unlikely.
+            Advanced Behaviour Remover &amp; Mood Corrector. Spray 1 stops her mid-sentence.
+            Spray 2 restores factory settings. Tough on moods. Gentle on marriages.&trade;
           </p>
           <div class="product-price"><span class="currency">USD</span> $19.99</div>
-          <a href="#signup" class="product-btn">Get Launch Access</a>
+          <a href="/wifebegone/" class="product-btn">View Product &rarr;</a>
           <p class="product-fine-print">
             Not effective within 48 hours of a mother-in-law visit.
             If symptoms persist, see your mate down the pub.
