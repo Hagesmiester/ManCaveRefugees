@@ -1353,25 +1353,40 @@ footer {
 </footer>
 
 <script>
-  // MVP email capture: stash locally + show thanks.
-  // Wire to Klaviyo/Formspree later by replacing this handler.
+  var SIGNUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxA1YuSvY7w2Jx7ybeOfhNO16z6MDPzYBmLLZTqvBBMFxTXOeqbLfJ-Wg7Cg8cUQ1M/exec';
+
   (function () {
     var form = document.getElementById('signupForm');
     var thanks = document.getElementById('signupThanks');
     if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var email = form.querySelector('input[name=email]').value.trim();
+      var input = form.querySelector('input[name=email]');
+      var email = (input.value || '').trim();
       if (!email || !/.+@.+\..+/.test(email)) {
-        form.querySelector('input[name=email]').style.borderColor = '#fff';
+        input.style.borderColor = '#fff';
         return;
       }
-      try {
-        var key = 'wbg_signups';
-        var list = JSON.parse(localStorage.getItem(key) || '[]');
-        list.push({ email: email, at: new Date().toISOString() });
-        localStorage.setItem(key, JSON.stringify(list));
-      } catch (e) { /* ignore */ }
+      var btn = form.querySelector('button');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      var payload = JSON.stringify({
+        email: email,
+        source: 'wifebegone',
+        page: location.pathname,
+        userAgent: navigator.userAgent,
+        referrer: document.referrer
+      });
+
+      // text/plain avoids CORS preflight; Apps Script reads e.postData.contents anyway
+      fetch(SIGNUP_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: payload
+      }).catch(function () { /* opaque response in no-cors; ignore */ });
+
       form.style.display = 'none';
       thanks.style.display = 'block';
     });
